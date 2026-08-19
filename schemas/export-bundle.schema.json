@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/UnhingedForge/The-Unhinged-Protocol/schemas/export-bundle.schema.json",
+  "title": "The Unhinged Protocol Export Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "exportedAt",
+    "containers",
+    "portals",
+    "rules",
+    "layouts",
+    "workspaces",
+    "widgets"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "exportedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "containers": {
+      "type": "array"
+    },
+    "portals": {
+      "type": "array"
+    },
+    "rules": {
+      "type": "array"
+    },
+    "layouts": {
+      "type": "array"
+    },
+    "workspaces": {
+      "type": "array"
+    },
+    "widgets": {
+      "type": "array"
+    }
+  }
+}

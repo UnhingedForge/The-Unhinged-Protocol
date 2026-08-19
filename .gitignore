@@ -1,0 +1,62 @@
+# Visual Studio and IDE state
+.vs/
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+publish/
+AppPackages/
+BundleArtifacts/
+Generated Files/
+
+# Test and analysis output
+[Tt]est[Rr]esult*/
+[Ll]og/
+[Ll]ogs/
+*.log
+*.binlog
+*.trx
+*.coverage
+*.coveragexml
+*.sarif
+
+# NuGet and package output
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+project.lock.json
+
+# Windows packaging
+*.appx
+*.appxbundle
+*.appxupload
+*.msix
+*.msixbundle
+*.msixupload
+*.pfx
+*.p12
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.local.json
+secrets.json
+*.key
+*.pem
+
+# Operating-system metadata
+Thumbs.db
+Desktop.ini
+.DS_Store

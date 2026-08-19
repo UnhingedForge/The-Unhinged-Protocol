@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TheUnhingedProtocol.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "TheUnhingedProtocol.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

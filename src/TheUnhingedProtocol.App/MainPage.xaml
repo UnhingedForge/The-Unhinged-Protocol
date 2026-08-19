@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="TheUnhingedProtocol.App.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:TheUnhingedProtocol.App"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <Grid MaxWidth="840" Padding="48" HorizontalAlignment="Center">
+            <StackPanel Spacing="20">
+                <TextBlock
+                    Text="{x:Bind ViewModel.ProductName, Mode=OneWay}"
+                    Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock
+                    Text="{x:Bind ViewModel.CurrentPhase, Mode=OneWay}"
+                    Foreground="{StaticResource ProtocolAccentBrush}"
+                    Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock
+                    Text="{x:Bind ViewModel.Summary, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Style="{StaticResource BodyTextBlockStyle}" />
+                <Border
+                    Padding="20"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Foundation status" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.StatusItems, Mode=OneWay}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,4" Orientation="Horizontal" Spacing="10">
+                                        <FontIcon
+                                            FontSize="14"
+                                            Foreground="{StaticResource ProtocolAccentBrush}"
+                                            Glyph="&#xE73E;" />
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="True"
+                    Message="Desktop organization features remain intentionally disabled until Phase 0 is approved."
+                    Severity="Informational"
+                    Title="Strict phase gate" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/UnhingedForge/The-Unhinged-Protocol/schemas/settings.schema.json",
+  "title": "The Unhinged Protocol Settings",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "theme", "diagnostics", "automation"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "theme": {
+      "enum": ["system", "light", "dark", "high-contrast"]
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowTransmission"],
+      "properties": {
+        "allowTransmission": {
+          "const": false
+        }
+      }
+    },
+    "automation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["previewRequired", "physicalMovesEnabled"],
+      "properties": {
+        "previewRequired": {
+          "const": true
+        },
+        "physicalMovesEnabled": {
+          "const": false
+        }
+      }
+    }
+  }
+}

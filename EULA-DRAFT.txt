@@ -1,0 +1,78 @@
+THE UNHINGED PROTOCOL — FREEWARE END-USER LICENSE AGREEMENT (DRAFT)
+
+Copyright (c) 2026 Michael D. Werdeman II. All rights reserved.
+
+IMPORTANT: THIS IS A PHASE 0 DRAFT FOR LEGAL REVIEW. IT DOES NOT GOVERN A RELEASE
+UNTIL THE COPYRIGHT OWNER APPROVES AND DISTRIBUTES IT WITH A COMPILED RELEASE.
+
+1. Scope
+
+This agreement applies only to compiled release binaries of The Unhinged Protocol
+(the "Application") distributed by or for Michael D. Werdeman II. It does not grant
+rights to the publicly viewable source code, documentation, artwork, signing material,
+or other repository content, which remain governed by LICENSE.txt and applicable
+third-party licenses.
+
+2. Free use license
+
+Subject to this agreement, the copyright owner grants you a personal, revocable,
+non-exclusive, non-transferable license to install and use unmodified official
+compiled releases of the Application at no monetary charge for personal or commercial
+purposes.
+
+3. Restrictions
+
+You may not redistribute, sublicense, sell, rent, lease, host for third-party access,
+misrepresent the origin of, or create derivative works from the Application or its
+proprietary materials without prior written permission. You may not remove copyright,
+license, signature, or attribution notices. You may not reverse engineer, decompile,
+or disassemble the Application except to the limited extent that applicable law
+expressly permits despite this restriction.
+
+4. Third-party components
+
+Third-party components remain governed by their own license terms and notices. Where
+a third-party license grants rights that conflict with a restriction above, that
+third-party license controls only for that component.
+
+5. Updates, support, and availability
+
+The copyright owner is not obligated to provide updates, support, compatibility, or
+continued availability. A later release may include revised terms, which apply only
+when accepted as required by applicable law.
+
+6. Privacy and user content
+
+The Application does not acquire ownership of user content. Its privacy disclosures
+and consent interfaces describe optional network features. Users remain responsible
+for backups and for confirming previews of file-changing operations.
+
+7. Termination
+
+This license terminates if you materially breach this agreement. Upon termination,
+you must stop using and uninstall the Application. Terms that by their nature should
+survive termination—including ownership, restrictions, disclaimers, and liability
+limits—survive.
+
+8. Disclaimer
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE APPLICATION IS PROVIDED "AS IS" AND
+"AS AVAILABLE," WITHOUT WARRANTIES OF ANY KIND, EXPRESS, IMPLIED, OR STATUTORY,
+INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND
+NON-INFRINGEMENT. SOME JURISDICTIONS DO NOT ALLOW CERTAIN DISCLAIMERS, SO SOME OF
+THESE TERMS MAY NOT APPLY TO YOU.
+
+9. Limitation of liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COPYRIGHT OWNER WILL NOT BE LIABLE FOR
+INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR
+LOSS OF DATA, PROFITS, REVENUE, BUSINESS, OR USE ARISING FROM THE APPLICATION. SOME
+JURISDICTIONS DO NOT ALLOW CERTAIN LIMITATIONS, SO SOME OF THESE TERMS MAY NOT APPLY.
+
+10. Governing terms
+
+Severability, governing law, venue, consumer-rights language, and any required regional
+terms must be completed during legal review before the first public binary release.
+Nothing in this draft limits rights that cannot lawfully be limited.
+
+Permission inquiries: unhingedservices@gmail.com
