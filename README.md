@@ -1,89 +1,112 @@
 # The Unhinged Protocol
 
-A proprietary, free-to-use Windows desktop organization companion by UnhingedForge.
-The source is publicly viewable but is not open source. See [LICENSE.txt](LICENSE.txt)
-and the pre-release [EULA draft](EULA-DRAFT.txt).
+> Turn a crowded Windows desktop into a calm, fast, personal command center.
 
-## Development status
+The Unhinged Protocol is being built to bring the best ideas in desktop containers,
+live folder access, layout recovery, automation, workspaces, widgets, and optional AI
+into one cohesive Windows companion—without replacing Explorer or taking control away
+from you.
 
-Only **Phase 0 — Foundation and Specification** is active. The current application is
-an intentionally non-functional foundation shell. Containers, folder portals, file
-rules, widgets, AI, synchronization, deployment, and release behavior may not be
-implemented until their phase is opened by the owner's written gate authorization.
+**Free to use. Local-first. Windows-native. Safety before automation.**
 
-The GitHub repository root is this `Source_Files` directory. Project specifications,
-review evidence, proposed visual assets, and release artifacts remain in the sibling
-`Documentation`, `Images`, and `Releases` directories and are intentionally outside
-Git.
+## One desktop organizer, built to go further
 
-## Technology baseline
+- **Everything in one place** — Organize shortcuts, files, folders, apps, and URLs
+  without assembling a collection of unrelated utilities.
+- **Automation you can trust** — Preview file-changing rules before they run, then
+  rely on journaling, recovery, and multi-step undo instead of silent changes.
+- **Made for real Windows setups** — Preserve your organization through mixed-DPI
+  monitors, resolution changes, virtual desktops, Remote Desktop, display hot-plug,
+  and Explorer restarts.
+- **Private by default** — Keep organization local, store credentials in Windows
+  Credential Manager, and decide exactly when content may leave the computer.
+- **Accessible from the foundation up** — Design for keyboard, mouse, touchpad,
+  screen readers, high contrast, reduced motion, and scalable text.
 
-- C# 14, .NET SDK 10.0.302, WinUI 3, MVVM
-- Windows App SDK 2.4.0
-- Windows 10 22H2 x64; Windows 11 22H2+ x64 and ARM64
-- SQLite indexed state and versioned JSON portability contracts
-- Runtime root: `%LOCALAPPDATA%\UnhingedForge\TheUnhingedProtocol`
+## Planned feature set
 
-## Prerequisites
+Every feature below is part of the approved product plan. Features open for
+implementation only when their development phase is authorized and are not considered
+available until that phase passes its acceptance gate.
 
-- Windows 10/11 on x64, with PowerShell 7 recommended
-- Visual Studio Community 2026 18.8 or newer with .NET desktop development, WinUI
-  application development, Windows 11 SDK, and MSIX tooling
-- .NET SDK 10.0.302 (`global.json` enforces the feature band)
-- Git and GitHub CLI for repository work
-- .NET 8 runtime only when running the pinned Microsoft SBOM tool
+- **Smart desktop containers** *(Phase 1)* — Draw, resize, style, tab, stack, collapse,
+  pin, lock, sort, and search groups containing files, folders, shortcuts, apps, and
+  URLs.
+- **Live folder portals** *(Phase 1)* — Browse real folders from the desktop using
+  grid, list, or details views with tabs, navigation, previews, search, sorting, and
+  native file actions.
+- **Focus controls and Peek** *(Phase 1)* — Hide or reveal desktop organization on
+  demand, use configurable hotkeys, and bring containers above open windows when
+  needed.
+- **Resilient layouts and snapshots** *(Phase 1)* — Save, compare, restore, export,
+  and roll back arrangements that adapt to monitor, DPI, resolution, RDP, and virtual
+  desktop changes.
+- **Unified search** *(Phase 1)* — Find desktop items, apps, settings, tags,
+  containers, portals, and Windows Search results from one place.
+- **Guided organization** *(Phase 1)* — Receive useful organization suggestions
+  without the onboarding process moving a single file.
+- **Visual automation rules** *(Phase 2)* — Build prioritized, nested rules from file
+  properties, tags, schedules, monitors, applications, and bounded regular
+  expressions—without arbitrary scripting.
+- **Transactional file safety** *(Phase 2)* — Preview and confirm physical changes,
+  prevent silent overwrites or permanent deletion, and recover or undo interrupted
+  operations.
+- **Dock, launcher, and workspaces** *(Phase 3)* — Launch grouped resources and
+  restore application sets and window layouts from keyboard-friendly profiles.
+- **Built-in productivity widgets** *(Phase 3)* — Add first-party clocks, calendars,
+  reminders, weather, system monitors, notes, tasks, Pomodoro, RSS, media controls,
+  and more, each independently disabled and lazy-loaded.
+- **Encrypted portability and sync** *(Phase 3)* — Back up settings with encrypted
+  exports or synchronize configuration through a folder you control; personal files
+  are never uploaded implicitly.
+- **Optional local-first intelligence** *(Phase 4)* — Use deterministic organization
+  first, then opt into downloadable local models or bring-your-own-key services with
+  an exact disclosure preview.
+- **AI with hard safety boundaries** *(Phase 4)* — Turn suggestions into visible,
+  deterministic rules; AI cannot bypass file-operation previews, confirmations, or
+  recovery.
+- **Accessible and deployment-ready releases** *(Phase 5)* — Deliver signed Windows
+  packages, portable builds, policy controls, localization, offline deployment,
+  diagnostics consent, checksums, SBOMs, updates, and rollback guidance.
 
-## Restore, build, and test
+## How it compares
 
-From the repository root in Windows PowerShell:
+The goal is not to copy another product. It is to combine the most useful outcomes in
+an original, safer design and then exceed them in resilience, privacy, accessibility,
+and file-operation protection.
 
-```powershell
-dotnet restore .\TheUnhingedProtocol.slnx --locked-mode
+| Software | Notable capabilities in the reviewed product | The Unhinged Protocol target |
+|---|---|---|
+| [Stardock Fences 6](https://www.stardock.com/products/fences/) | Resizable groups, sorting, Folder Portals, tabs, roll-up, Peek, and rules | Bring these organization outcomes into an accessibility-first system, then add transactional rule previews, recovery, broader workspace tools, and local-first intelligence |
+| [Portals](https://portals-app.com/) and [Nimi Places](https://mynimi.net/Projects/Nimi-Places/) | Multi-tab folder access, custom sorting, containers, labels, thumbnails, previews, and search | Unite rich live portals with desktop containers, global search, layout snapshots, and tested 10,000-item responsiveness |
+| [iTop Easy Desktop](https://www.itopvpn.com/itop-easy-desktop?product=idr) | Desktop boxes, quick categories, search, hide controls, snapshots, widgets, and AI assistance | Combine guided organization, widgets, and optional AI without silent onboarding moves, forced cloud accounts, or unreviewed file-changing actions |
+| [Microsoft PowerToys](https://learn.microsoft.com/en-us/windows/powertoys/) | FancyZones monitor layouts and Workspaces application capture and launch | Apply comparable resilience to organizer surfaces while adding desktop content, portals, snapshots, and explicit workspace recovery results |
+| [Winstep Nexus](https://www.winstep.net/nexus.asp) and [SideSlide](https://www.northglide.com/sideslide.html) | Docks, stacks, launchers, grouped launches, tags, notes, reminders, RSS, and widgets | Offer a cohesive optional dock and first-party widget system that coexists with the Windows taskbar and stops background work when disabled |
+| [DesktopOK](https://www.softwareok.com/?seite=Freeware%2Fdesktopok) and [ReIcon](https://www.sordum.org/8366/reicon-v2-3-restore-desktop-icon-layouts/) | Portable desktop icon layout save and restore | Expand recovery into named history, comparison, export, schema validation, rollback, and display-profile-aware restoration |
+| **The Unhinged Protocol** | **Planned: containers + portals + search + resilient layouts + safe automation + workspaces + widgets + optional AI** | **One Windows-native companion governed by strict safety, privacy, accessibility, performance, and phase-completion gates** |
 
-dotnet build .\TheUnhingedProtocol.slnx `
-  --configuration Release --no-restore -p:Platform=x64
+Comparison statements summarize official public product information reviewed on
+August 19, 2026. The Unhinged Protocol column describes the approved target, not
+currently shipped functionality.
 
-dotnet build .\src\TheUnhingedProtocol.App\TheUnhingedProtocol.App.csproj `
-  --configuration Release --no-restore -p:Platform=ARM64
+## Built deliberately, not rushed
 
-dotnet test .\TheUnhingedProtocol.slnx `
-  --configuration Release --no-build --no-restore -p:Platform=x64
+The project uses six strict, owner-controlled phases. A phase must pass its applicable
+build, test, accessibility, security, privacy, performance, recovery, and license
+checks before the next phase can begin. This makes the ambitious feature set
+achievable without trading away reliability or user control.
 
-```
+**Current status: Phase 0 — Foundation and Specification.** The repository currently
+contains a non-functional foundation shell, architecture contracts, safety models,
+tests, and build automation. The desktop organizer itself begins in Phase 1 only after
+the owner accepts the Phase 0 gate.
 
-ARM64 is cross-compiled on x64; execute ARM64 UI tests on an ARM64 machine. To run the
-complete Phase 0 local check:
+## Follow the build
 
-```powershell
-.\scripts\Validate-Phase0.ps1
-```
+Star or watch the repository to follow each phase from verified foundation to stable
+Windows release. Developers can review the reproducible build and validation process
+in [DEVELOPMENT.md](DEVELOPMENT.md).
 
-## Solution boundaries
-
-- `Domain`: versioned entities and invariants; no external packages.
-- `Application`: use-case ports; depends only on Domain.
-- `Infrastructure`: persistence and future Windows adapters; depends on Application
-  and Domain.
-- `App`: WinUI composition and presentation only.
-- `tests`: contract, migration, and dependency-boundary enforcement.
-
-All package versions are central and every project has a lock file. Warnings are
-errors. Dependency vulnerabilities, secret findings, architecture violations, failed
-tests, and unexpected artifacts block the phase.
-
-## Phase governance
-
-Phase 0 was developed on branch `phase/0-foundation` and is integrated into `main`.
-The signed `phase-0-complete` tag is the immutable recovery anchor after the completed
-phase branch is removed under the owner-only branch policy. The GitHub milestone is
-`Phase 0 - Foundation and Specification`, and requirements are issues #1–#10. No
-Phase 1 branch or implementation is permitted until Phase 0 is completely accepted
-and the owner writes exactly:
-
-`I approve Phase 0 and authorize Phase 1.`
-
-## Licensing and contributions
-
-Copyright (c) 2026 Michael D. Werdeman II. All rights reserved. No general permission
-to copy, modify, distribute, or create derivative works is granted. Do not submit code
-or assets unless a contribution process and written license terms are published.
+Compiled releases are intended to remain free for personal and commercial use. The
+source is publicly viewable and proprietary; see [LICENSE.txt](LICENSE.txt) and the
+pre-release [EULA draft](EULA-DRAFT.txt).
