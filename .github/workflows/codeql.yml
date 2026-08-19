@@ -15,6 +15,7 @@ permissions:
   security-events: write
 
 env:
+  CODEQL_OVERLAY_DATABASE_MODE: 'none'
   DOTNET_CLI_TELEMETRY_OPTOUT: '1'
   TESTINGPLATFORM_TELEMETRY_OPTOUT: '1'
 
