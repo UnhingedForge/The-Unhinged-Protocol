@@ -11,6 +11,7 @@ $approvedPatterns = @(
     '^SQLite$',
     '^SQLitePCLRaw\.',
     '^System\.Numerics\.Tensors$',
+    '^System\.Security\.AccessControl$',
     '^xunit\.'
 )
 

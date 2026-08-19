@@ -73,10 +73,12 @@ tests, and unexpected artifacts block the phase.
 
 ## Phase governance
 
-Phase 0 uses branch `phase/0-foundation` and GitHub milestone
-`Phase 0 - Foundation and Specification`. Requirements are issues #1–#10. No Phase 1
-branch or implementation is permitted until Phase 0 is completely accepted and the
-owner writes exactly:
+Phase 0 was developed on branch `phase/0-foundation` and is integrated into `main`.
+The signed `phase-0-complete` tag is the immutable recovery anchor after the completed
+phase branch is removed under the owner-only branch policy. The GitHub milestone is
+`Phase 0 - Foundation and Specification`, and requirements are issues #1–#10. No
+Phase 1 branch or implementation is permitted until Phase 0 is completely accepted
+and the owner writes exactly:
 
 `I approve Phase 0 and authorize Phase 1.`
 

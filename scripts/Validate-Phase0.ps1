@@ -25,7 +25,7 @@ try {
     }
     dotnet build .\TheUnhingedProtocol.slnx --configuration Release --no-restore -p:Platform=x64
     dotnet build .\src\TheUnhingedProtocol.App\TheUnhingedProtocol.App.csproj --configuration Release --no-restore -p:Platform=ARM64
-    dotnet test .\TheUnhingedProtocol.slnx --configuration Release --no-build --no-restore -p:Platform=x64 --logger 'console;verbosity=normal'
+    dotnet test .\TheUnhingedProtocol.slnx --configuration Release --no-build --no-restore -p:Platform=x64
 
     & "$PSScriptRoot\Test-DependencyPolicy.ps1"
     & "$PSScriptRoot\Test-ArtifactPolicy.ps1"

@@ -7,16 +7,18 @@ binary inventory and SBOM control release contents.
 | Component | Pinned/resolved version | License |
 |---|---:|---|
 | CommunityToolkit.Mvvm | 8.4.2 | MIT |
-| coverlet.collector | 6.0.4 | MIT |
+| coverlet.collector | 10.0.1 | MIT |
 | Microsoft.Data.Sqlite / Core | 10.0.10 | MIT |
-| Microsoft.NET.Test.Sdk | 18.8.1 | MIT |
+| Microsoft.NET.Test.Sdk | 18.9.0 | MIT |
+| Microsoft Testing Platform components | 2.3.3 | MIT |
 | Microsoft.Windows.SDK.BuildTools | 10.0.28000.2526 | Microsoft Windows SDK license |
 | Microsoft.Windows.SDK.BuildTools.WinApp | 0.6.1 | MIT |
 | Microsoft.WindowsAppSDK Runtime / WinUI components | 2.4.0 / 2.3.6 | Microsoft Windows App SDK license and included component terms |
 | SQLite | 3.53.4 | Public domain |
 | SQLitePCLRaw packages | 3.0.5 | Apache-2.0 |
-| xunit.v3 | 3.2.2 | Apache-2.0 |
-| xunit.runner.visualstudio | 3.1.4 | Apache-2.0 |
+| System.Security.AccessControl | 6.0.1 | MIT |
+| xunit.v3 | 4.0.0 | Apache-2.0 |
+| xunit.runner.visualstudio | 4.0.0 | Apache-2.0 |
 
 Authoritative terms are included in each NuGet package and linked from its NuGet
 metadata. Restoring packages constitutes no change to the proprietary license of this
