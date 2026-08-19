@@ -7,6 +7,14 @@
 *.userosscache
 *.sln.docstates
 *.DotSettings.user
+*.rsuser
+*.userprefs
+
+# Local SDK, package, and tool caches
+.dotnet/
+.nuget/
+.cache/
+BenchmarkDotNet.Artifacts/
 
 # Build output
 [Bb]in/
@@ -29,6 +37,8 @@ Generated Files/
 *.coverage
 *.coveragexml
 *.sarif
+coverage/
+coverage-report/
 
 # NuGet and package output
 *.nupkg
@@ -55,6 +65,21 @@ project.lock.json
 secrets.json
 *.key
 *.pem
+
+# Local runtime state and databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3
+
+# Temporary and merge-tool files
+*.tmp
+*.temp
+*.bak
+*.orig
 
 # Operating-system metadata
 Thumbs.db
