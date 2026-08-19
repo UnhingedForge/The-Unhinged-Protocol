@@ -57,7 +57,7 @@ jobs:
           -nsb https://github.com/UnhingedForge/The-Unhinged-Protocol
 
       - name: Upload validation SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: phase-0-validation-sbom
           path: src/TheUnhingedProtocol.App/bin/Release/net10.0-windows10.0.26100.0/win-x64/_manifest/
