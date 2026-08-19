@@ -1,0 +1,49 @@
+THE UNHINGED PROTOCOL — PROPRIETARY SOFTWARE NOTICE
+
+Copyright (c) 2026 Michael D. Werdeman II
+All rights reserved.
+
+1. Ownership
+
+The source code, documentation, artwork, and other original materials in this
+repository (collectively, the "Software") are proprietary and are owned by
+Michael D. Werdeman II or their respective third-party owners.
+
+2. No General License Granted
+
+Except for the limited permissions required by GitHub's Terms of Service, no
+license or permission is granted to use, copy, reproduce, modify, adapt, merge,
+publish, distribute, sublicense, sell, commercially exploit, or create
+derivative works from the Software, in whole or in part, without prior written
+permission from the copyright owner.
+
+3. Public Repository
+
+Public availability of this repository does not make the Software open source
+and does not place it in the public domain. GitHub users may view and fork this
+repository only as permitted by GitHub's Terms of Service. Those platform
+permissions do not grant additional rights to use, modify, redistribute, sell,
+or incorporate the Software into another work.
+
+4. Future Application Releases
+
+The project may provide compiled application releases at no monetary cost.
+Free availability of a compiled release does not grant rights to the source
+code. Any compiled release may be accompanied by separate end-user terms that
+govern installation and use of that release.
+
+5. Third-Party Materials
+
+Third-party components, if any, remain subject to their respective licenses,
+copyright notices, and terms. Nothing in this notice limits rights granted by
+those third-party licenses.
+
+6. Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. TO THE MAXIMUM EXTENT PERMITTED
+BY LAW, THE COPYRIGHT OWNER WILL NOT BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM OR RELATED TO THE SOFTWARE OR ITS USE.
+
+Permission inquiries: unhingedservices@gmail.com
