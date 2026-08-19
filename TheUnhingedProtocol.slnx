@@ -8,8 +8,10 @@
     <Project Path="src/TheUnhingedProtocol.Application/TheUnhingedProtocol.Application.csproj" />
     <Project Path="src/TheUnhingedProtocol.Domain/TheUnhingedProtocol.Domain.csproj" />
     <Project Path="src/TheUnhingedProtocol.Infrastructure/TheUnhingedProtocol.Infrastructure.csproj" />
+    <Project Path="src/TheUnhingedProtocol.Presentation/TheUnhingedProtocol.Presentation.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/TheUnhingedProtocol.App.Tests/TheUnhingedProtocol.App.Tests.csproj" />
     <Project Path="tests/TheUnhingedProtocol.Architecture.Tests/TheUnhingedProtocol.Architecture.Tests.csproj" />
     <Project Path="tests/TheUnhingedProtocol.Domain.Tests/TheUnhingedProtocol.Domain.Tests.csproj" />
   </Folder>

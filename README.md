@@ -29,9 +29,10 @@ Every feature below is part of the approved product plan. Features open for
 implementation only when their development phase is authorized and are not considered
 available until that phase passes its acceptance gate.
 
-- **Smart desktop containers** *(Phase 1)* — Draw, resize, style, tab, stack, collapse,
-  pin, lock, sort, and search groups containing files, folders, shortcuts, apps, and
-  URLs.
+- **Smart desktop containers** *(Phase 1)* — Draw, resize, and style safe reference
+  groups for files, folders, shortcuts, apps, and URLs; divide them into tabs,
+  expandable stacks, or pages; then roll up, collapse, pin, lock, auto-size, snap,
+  sort, and search them without moving the originals.
 - **Live folder portals** *(Phase 1)* — Browse real folders from the desktop using
   grid, list, or details views with tabs, navigation, previews, search, sorting, and
   native file actions.
@@ -96,10 +97,14 @@ build, test, accessibility, security, privacy, performance, recovery, and licens
 checks before the next phase can begin. This makes the ambitious feature set
 achievable without trading away reliability or user control.
 
-**Current status: Phase 0 — Foundation and Specification.** The repository currently
-contains a non-functional foundation shell, architecture contracts, safety models,
-tests, and build automation. The desktop organizer itself begins in Phase 1 only after
-the owner accepts the Phase 0 gate.
+**Current status: Phase 1 — Core Desktop Organizer.** Phase 0 is accepted and closed.
+The development source now implements the complete PH1-001 through PH1-010 feature
+set: safe reference containers, live folder portals, flexible composition and
+appearance, independent visibility and Peek, resilient display profiles, checksummed
+layout snapshots, unified local search, and consent-based non-destructive onboarding.
+It is undergoing the owner-controlled Phase 1 gate before it can be called an accepted
+release. State stays local, unavailable locations remain recoverable, and original
+content is never silently moved, overwritten, deleted, or transmitted.
 
 ## Follow the build
 

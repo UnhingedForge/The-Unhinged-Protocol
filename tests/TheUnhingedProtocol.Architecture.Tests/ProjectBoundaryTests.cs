@@ -23,10 +23,18 @@ public sealed class ProjectBoundaryTests
             ]);
         AssertProjectReferences(
             root,
-            "src/TheUnhingedProtocol.App/TheUnhingedProtocol.App.csproj",
+            "src/TheUnhingedProtocol.Presentation/TheUnhingedProtocol.Presentation.csproj",
             [
                 "src/TheUnhingedProtocol.Application/TheUnhingedProtocol.Application.csproj",
+                "src/TheUnhingedProtocol.Domain/TheUnhingedProtocol.Domain.csproj",
+            ]);
+        AssertProjectReferences(
+            root,
+            "src/TheUnhingedProtocol.App/TheUnhingedProtocol.App.csproj",
+            [
+                "src/TheUnhingedProtocol.Domain/TheUnhingedProtocol.Domain.csproj",
                 "src/TheUnhingedProtocol.Infrastructure/TheUnhingedProtocol.Infrastructure.csproj",
+                "src/TheUnhingedProtocol.Presentation/TheUnhingedProtocol.Presentation.csproj",
             ]);
     }
 
@@ -42,6 +50,56 @@ public sealed class ProjectBoundaryTests
         XDocument project = XDocument.Load(projectPath);
 
         Assert.Empty(project.Descendants("PackageReference"));
+    }
+
+    [Fact]
+    public void ContainerSurfaceHonorsNativeAccessibilityAndThemeContracts()
+    {
+        string root = FindRepositoryRoot();
+        string xaml = File.ReadAllText(Path.Combine(root, "src", "TheUnhingedProtocol.App", "MainPage.xaml"));
+        string theme = File.ReadAllText(Path.Combine(
+            root,
+            "src",
+            "TheUnhingedProtocol.App",
+            "Styles",
+            "FoundationTheme.xaml"));
+
+        Assert.Contains("ThemeResource", xaml, StringComparison.Ordinal);
+        Assert.Contains("AutomationProperties.Name", xaml, StringComparison.Ordinal);
+        Assert.Contains("AutomationProperties.HelpText", xaml, StringComparison.Ordinal);
+        Assert.Contains("TitleTextBlockStyle", xaml, StringComparison.Ordinal);
+        Assert.Contains("BodyTextBlockStyle", xaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("Storyboard", xaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("Storyboard", theme, StringComparison.Ordinal);
+        Assert.Contains("Unified local search", xaml, StringComparison.Ordinal);
+        Assert.Contains("Guided onboarding", xaml, StringComparison.Ordinal);
+        Assert.Contains("Global organizer visibility", xaml, StringComparison.Ordinal);
+        Assert.Contains("AutomationProperties.LiveSetting", xaml, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void PhaseOneOperationsRemainLocalAndDoNotIntroducePhaseTwoAuthority()
+    {
+        string root = FindRepositoryRoot();
+        string search = File.ReadAllText(Path.Combine(
+            root,
+            "src",
+            "TheUnhingedProtocol.Infrastructure",
+            "Search",
+            "UnifiedSearchService.cs"));
+        string onboarding = File.ReadAllText(Path.Combine(
+            root,
+            "src",
+            "TheUnhingedProtocol.Infrastructure",
+            "Shell",
+            "NonDestructiveOnboardingService.cs"));
+
+        Assert.DoesNotContain("HttpClient", search, StringComparison.Ordinal);
+        Assert.DoesNotContain("HttpClient", onboarding, StringComparison.Ordinal);
+        Assert.DoesNotContain("File.Move", onboarding, StringComparison.Ordinal);
+        Assert.DoesNotContain("File.Delete", onboarding, StringComparison.Ordinal);
+        Assert.DoesNotContain("Directory.Move", onboarding, StringComparison.Ordinal);
+        Assert.DoesNotContain("Directory.Delete", onboarding, StringComparison.Ordinal);
     }
 
     private static void AssertProjectReferences(

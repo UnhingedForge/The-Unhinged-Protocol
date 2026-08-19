@@ -5,6 +5,47 @@ namespace TheUnhingedProtocol.Application.Contracts;
 public interface IContainerService
 {
     public Task<IReadOnlyList<ContainerDefinition>> GetAllAsync(CancellationToken cancellationToken);
+
+    public Task<ContainerDefinition> CreateReferenceGroupAsync(
+        string name,
+        ContainerBounds bounds,
+        CancellationToken cancellationToken);
+
+    public Task<ContainerDefinition> UpdateBoundsAsync(
+        Guid containerId,
+        ContainerBounds bounds,
+        CancellationToken cancellationToken);
+
+    public Task<ContainerDefinition> UpdateAsync(
+        ContainerDefinition container,
+        CancellationToken cancellationToken);
+}
+
+public interface IFolderPortalService
+{
+    public Task<IReadOnlyList<FolderPortal>> GetAllAsync(CancellationToken cancellationToken);
+
+    public Task<FolderPortal> CreateAsync(
+        string name,
+        string folderPath,
+        CancellationToken cancellationToken);
+
+    public Task<FolderPortal> UpdateAsync(
+        FolderPortal portal,
+        CancellationToken cancellationToken);
+
+    public Task DeleteAsync(Guid portalId, CancellationToken cancellationToken);
+}
+
+public interface IFolderBrowserService
+{
+    public Task<PortalLoadResult> BrowseAsync(
+        FolderPortalTab tab,
+        CancellationToken cancellationToken);
+
+    public Task<PortalPreview> GetPreviewAsync(
+        PortalItem item,
+        CancellationToken cancellationToken);
 }
 
 public interface ILayoutService

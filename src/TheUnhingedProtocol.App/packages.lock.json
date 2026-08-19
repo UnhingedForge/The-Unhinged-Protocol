@@ -130,6 +130,14 @@
           "TheUnhingedProtocol.Domain": "[1.0.0, )"
         }
       },
+      "theunhingedprotocol.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "CommunityToolkit.Mvvm": "[8.4.2, )",
+          "TheUnhingedProtocol.Application": "[1.0.0, )",
+          "TheUnhingedProtocol.Domain": "[1.0.0, )"
+        }
+      },
       "Microsoft.Data.Sqlite": {
         "type": "CentralTransitive",
         "requested": "[10.0.10, )",

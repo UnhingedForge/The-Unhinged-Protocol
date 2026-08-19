@@ -4,54 +4,679 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:TheUnhingedProtocol.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:primitives="using:Microsoft.UI.Xaml.Controls.Primitives"
+    xmlns:local="using:TheUnhingedProtocol.App"
     mc:Ignorable="d">
 
-    <ScrollViewer>
-        <Grid MaxWidth="840" Padding="48" HorizontalAlignment="Center">
-            <StackPanel Spacing="20">
+    <Page.Resources>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
+        <local:ContainerAppearanceBrushConverter x:Key="ContainerAppearanceBrushConverter" />
+        <local:ContainerIconBrushConverter x:Key="ContainerIconBrushConverter" />
+    </Page.Resources>
+
+    <Grid Padding="36" RowDefinitions="Auto,Auto,*" RowSpacing="18">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="24">
+            <StackPanel Spacing="8">
+                <TextBlock Text="{x:Bind ViewModel.ProductName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="{x:Bind ViewModel.CurrentPhase, Mode=OneWay}" Foreground="{StaticResource ProtocolAccentBrush}" Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock MaxWidth="720" HorizontalAlignment="Left" Text="{x:Bind ViewModel.Summary, Mode=OneWay}" TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="8">
+                <Button
+                    MinWidth="132"
+                    AutomationProperties.HelpText="Choose a folder and create a live, read-only portal view."
+                    AutomationProperties.Name="Create a live folder portal"
+                    Click="NewPortal_Click"
+                    Content="New portal" />
+                <ToggleButton
+                    x:Name="DrawContainerToggle"
+                    MinWidth="132"
+                    AutomationProperties.HelpText="Draw a rectangle in the workspace to create a custom-sized empty container."
+                    Content="Draw container" />
+                <Button MinWidth="112" Content="Templates">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Click="CompactTemplate_Click" Text="Compact" />
+                            <MenuFlyoutItem Click="StandardTemplate_Click" Text="Standard" />
+                            <MenuFlyoutItem Click="WideTemplate_Click" Text="Wide" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+                <Button
+                    MinWidth="152"
+                    AutomationProperties.HelpText="Creates an empty standard reference container without moving any files."
+                    AutomationProperties.Name="Create a new desktop container"
+                    Command="{x:Bind ViewModel.CreateContainerCommand}"
+                    Content="New container"
+                    Style="{StaticResource AccentButtonStyle}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto" ColumnSpacing="8">
+            <ToggleButton
+                x:Name="GlobalVisibilityToggle"
+                AutomationProperties.HelpText="Show or hide organizer containers and portals without changing individual visibility choices."
+                AutomationProperties.Name="Global organizer visibility"
+                Click="GlobalVisibility_Click"
+                Content="Organizer visible"
+                IsChecked="{x:Bind Tools.IsOrganizerVisible, Mode=OneWay}" />
+            <Button Grid.Column="1" AutomationProperties.Name="Focus controls" Click="FocusControls_Click" Content="Focus controls" />
+            <Button Grid.Column="2" AutomationProperties.Name="Layout snapshots" Click="Layouts_Click" Content="Layouts" />
+            <Button Grid.Column="3" AutomationProperties.Name="Guided onboarding" Click="Onboarding_Click" Content="Onboarding" />
+            <AutoSuggestBox
+                x:Name="UnifiedSearchBox"
+                Grid.Column="4"
+                MinWidth="260"
+                AutomationProperties.HelpText="Search containers, portals, desktop items, applications, settings, tags, and the local Windows index."
+                AutomationProperties.Name="Unified local search"
+                PlaceholderText="Search this PC"
+                QueryIcon="Find"
+                QuerySubmitted="UnifiedSearch_QuerySubmitted" />
+            <Button Grid.Column="5" AutomationProperties.Name="Refresh display profile" Click="RefreshDisplay_Click" Content="Refresh displays" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel MinWidth="900" Spacing="14">
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind Tools.HasError, Mode=OneWay}"
+                    Message="{x:Bind Tools.StatusMessage, Mode=OneWay}"
+                    Severity="Warning"
+                    Title="Phase 1 control status" />
+
                 <TextBlock
-                    Text="{x:Bind ViewModel.ProductName, Mode=OneWay}"
-                    Style="{StaticResource TitleTextBlockStyle}" />
+                    AutomationProperties.LiveSetting="Polite"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{x:Bind Tools.StatusMessage, Mode=OneWay}"
+                    TextWrapping="Wrap" />
+
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind Tools.IsOrganizerHidden, Mode=OneWay}"
+                    Message="Your containers and portals are hidden globally. Individual visibility choices are preserved. Use Organizer visible or the configured hotkey to restore them."
+                    Severity="Informational"
+                    Title="Organizer hidden" />
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                    Severity="Error"
+                    Title="Container unavailable" />
+
                 <TextBlock
-                    Text="{x:Bind ViewModel.CurrentPhase, Mode=OneWay}"
-                    Foreground="{StaticResource ProtocolAccentBrush}"
-                    Style="{StaticResource SubtitleTextBlockStyle}" />
-                <TextBlock
-                    Text="{x:Bind ViewModel.Summary, Mode=OneWay}"
-                    TextWrapping="Wrap"
-                    Style="{StaticResource BodyTextBlockStyle}" />
+                    AutomationProperties.LiveSetting="Polite"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                    TextWrapping="Wrap" />
+
+                <ItemsControl
+                    Width="{Binding ActualWidth, ElementName=WorkspaceBorder}"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{x:Bind ViewModel.Portals, Mode=OneWay}"
+                    Visibility="{x:Bind Tools.IsOrganizerVisible, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="0,0,0,14"
+                                Padding="16"
+                                AutomationProperties.Name="{Binding AccessibleName}"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto,420" RowSpacing="10">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                            <TextBlock
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="Live reference view — file-changing actions are not available"
+                                                Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </StackPanel>
+                                        <Button
+                                            Grid.Column="1"
+                                            AutomationProperties.Name="Add folder portal tab"
+                                            Click="AddPortalTab_Click"
+                                            Content="Add tab" />
+                                    </Grid>
+
+                                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled">
+                                        <ItemsControl ItemsSource="{Binding Tabs}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" Spacing="6" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button
+                                                        MinWidth="116"
+                                                        AutomationProperties.HelpText="Select this tab. Its folder, search, view, sort, and navigation history are independent."
+                                                        AutomationProperties.Name="{Binding Header}"
+                                                        Click="PortalTab_Click"
+                                                        Content="{Binding Header}"
+                                                        Tag="{Binding Id}">
+                                                        <Button.ContextFlyout>
+                                                            <MenuFlyout>
+                                                                <MenuFlyoutItem Click="ClosePortalTab_Click" Text="Close tab" />
+                                                            </MenuFlyout>
+                                                        </Button.ContextFlyout>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+
+                                    <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto" ColumnSpacing="6">
+                                        <Button AutomationProperties.Name="Back" Click="PortalBack_Click" IsEnabled="{Binding ActiveTab.CanGoBack}" ToolTipService.ToolTip="Back">
+                                            <FontIcon Glyph="&#xE72B;" />
+                                        </Button>
+                                        <Button Grid.Column="1" AutomationProperties.Name="Forward" Click="PortalForward_Click" IsEnabled="{Binding ActiveTab.CanGoForward}" ToolTipService.ToolTip="Forward">
+                                            <FontIcon Glyph="&#xE72A;" />
+                                        </Button>
+                                        <Button Grid.Column="2" AutomationProperties.Name="Up one folder" Click="PortalUp_Click" IsEnabled="{Binding ActiveTab.CanGoUp}" ToolTipService.ToolTip="Up one folder">
+                                            <FontIcon Glyph="&#xE74A;" />
+                                        </Button>
+                                        <Button Grid.Column="3" AutomationProperties.Name="Refresh folder portal" Click="PortalRefresh_Click" ToolTipService.ToolTip="Refresh">
+                                            <FontIcon Glyph="&#xE72C;" />
+                                        </Button>
+                                        <TextBox
+                                            Grid.Column="4"
+                                            AutomationProperties.Name="Folder portal address"
+                                            KeyDown="PortalAddress_KeyDown"
+                                            Text="{Binding ActiveTab.CurrentPath, Mode=OneWay}" />
+                                        <Button Grid.Column="5" AutomationProperties.Name="Choose another folder" Click="ChangePortalTarget_Click" Content="Choose folder" />
+                                    </Grid>
+
+                                    <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                        <AutoSuggestBox
+                                            AutomationProperties.Name="Search this folder portal"
+                                            PlaceholderText="Search this folder"
+                                            QueryIcon="Find"
+                                            QuerySubmitted="PortalSearch_QuerySubmitted"
+                                            Text="{Binding ActiveTab.SearchQuery, Mode=OneWay}" />
+                                        <ComboBox
+                                            Grid.Column="1"
+                                            MinWidth="126"
+                                            AutomationProperties.Name="Portal view"
+                                            SelectedIndex="{Binding ActiveTab.ViewModeIndex, Mode=OneWay}"
+                                            SelectionChanged="PortalView_SelectionChanged">
+                                            <ComboBoxItem Content="Grid" Tag="Grid" />
+                                            <ComboBoxItem Content="List" Tag="List" />
+                                            <ComboBoxItem Content="Details" Tag="Details" />
+                                        </ComboBox>
+                                        <ComboBox
+                                            Grid.Column="2"
+                                            MinWidth="170"
+                                            AutomationProperties.Name="Portal sort order"
+                                            SelectedIndex="{Binding ActiveTab.SortModeIndex, Mode=OneWay}"
+                                            SelectionChanged="PortalSort_SelectionChanged">
+                                            <ComboBoxItem Content="Name A–Z" Tag="NameAscending" />
+                                            <ComboBoxItem Content="Name Z–A" Tag="NameDescending" />
+                                            <ComboBoxItem Content="Type, then name" Tag="TypeThenName" />
+                                            <ComboBoxItem Content="Newest modified" Tag="ModifiedNewest" />
+                                            <ComboBoxItem Content="Oldest modified" Tag="ModifiedOldest" />
+                                            <ComboBoxItem Content="Largest first" Tag="SizeDescending" />
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <Grid Grid.Row="4" RowDefinitions="Auto,*" RowSpacing="8">
+                                        <Grid>
+                                            <TextBlock
+                                                AutomationProperties.LiveSetting="Polite"
+                                                Text="Loading folder contents…"
+                                                Visibility="{Binding ActiveTab.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                            <InfoBar
+                                                IsClosable="False"
+                                                IsOpen="{Binding ActiveTab.HasRecoverableError}"
+                                                Message="{Binding ActiveTab.StateMessage}"
+                                                Severity="Warning"
+                                                Title="Folder needs attention" />
+                                        </Grid>
+
+                                        <Grid Grid.Row="1">
+                                            <GridView
+                                                AutomationProperties.Name="Folder portal grid items"
+                                                IsItemClickEnabled="True"
+                                                ItemClick="PortalItem_ItemClick"
+                                                ItemsSource="{Binding ActiveTab.GridItems}"
+                                                SelectionMode="Extended"
+                                                Visibility="{Binding ActiveTab.IsGridView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <GridView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Width="132" MinHeight="96" Padding="8" AutomationProperties.Name="{Binding AccessibleName}" Spacing="6">
+                                                            <FontIcon HorizontalAlignment="Center" FontSize="30" Glyph="{Binding IconGlyph}" />
+                                                            <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" TextAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxLines="2" />
+                                                            <StackPanel.ContextFlyout>
+                                                                <MenuFlyout>
+                                                                    <MenuFlyoutItem Click="OpenPortalItem_Click" Text="Open" />
+                                                                    <MenuFlyoutItem Click="PreviewPortalItem_Click" Text="Preview" />
+                                                                    <MenuFlyoutItem Click="ShowPortalItemLocation_Click" Text="Show in Explorer" />
+                                                                    <MenuFlyoutSeparator />
+                                                                    <MenuFlyoutItem Click="CopyPortalItem_Click" Text="Copy item" />
+                                                                    <MenuFlyoutItem Click="CopyPortalPath_Click" Text="Copy path" />
+                                                                </MenuFlyout>
+                                                            </StackPanel.ContextFlyout>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </GridView.ItemTemplate>
+                                            </GridView>
+
+                                            <ListView
+                                                AutomationProperties.Name="Folder portal list items"
+                                                IsItemClickEnabled="True"
+                                                ItemClick="PortalItem_ItemClick"
+                                                ItemsSource="{Binding ActiveTab.ListItems}"
+                                                SelectionMode="Extended"
+                                                Visibility="{Binding ActiveTab.IsListView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid MinHeight="44" Padding="8,4" AutomationProperties.Name="{Binding AccessibleName}" ColumnDefinitions="36,*,Auto" ColumnSpacing="8">
+                                                            <FontIcon Glyph="{Binding IconGlyph}" />
+                                                            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding TypeLabel}" />
+                                                            <Grid.ContextFlyout>
+                                                                <MenuFlyout>
+                                                                    <MenuFlyoutItem Click="OpenPortalItem_Click" Text="Open" />
+                                                                    <MenuFlyoutItem Click="PreviewPortalItem_Click" Text="Preview" />
+                                                                    <MenuFlyoutItem Click="ShowPortalItemLocation_Click" Text="Show in Explorer" />
+                                                                    <MenuFlyoutSeparator />
+                                                                    <MenuFlyoutItem Click="CopyPortalItem_Click" Text="Copy item" />
+                                                                    <MenuFlyoutItem Click="CopyPortalPath_Click" Text="Copy path" />
+                                                                </MenuFlyout>
+                                                            </Grid.ContextFlyout>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+
+                                            <ListView
+                                                AutomationProperties.Name="Folder portal details items"
+                                                IsItemClickEnabled="True"
+                                                ItemClick="PortalItem_ItemClick"
+                                                ItemsSource="{Binding ActiveTab.DetailsItems}"
+                                                SelectionMode="Extended"
+                                                Visibility="{Binding ActiveTab.IsDetailsView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <ListView.Header>
+                                                    <Grid Padding="52,4,8,4" ColumnDefinitions="3*,*,Auto" ColumnSpacing="12">
+                                                        <TextBlock Text="Name" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                                        <TextBlock Grid.Column="1" Text="Modified" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                                        <TextBlock Grid.Column="2" MinWidth="72" Text="Size" TextAlignment="Right" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                                    </Grid>
+                                                </ListView.Header>
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid MinHeight="42" Padding="8,4" AutomationProperties.Name="{Binding AccessibleName}" ColumnDefinitions="36,3*,*,Auto" ColumnSpacing="12">
+                                                            <FontIcon Glyph="{Binding IconGlyph}" />
+                                                            <StackPanel Grid.Column="1">
+                                                                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding TypeLabel}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                            </StackPanel>
+                                                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding ModifiedLabel}" />
+                                                            <TextBlock Grid.Column="3" MinWidth="72" VerticalAlignment="Center" Text="{Binding SizeLabel}" TextAlignment="Right" />
+                                                            <Grid.ContextFlyout>
+                                                                <MenuFlyout>
+                                                                    <MenuFlyoutItem Click="OpenPortalItem_Click" Text="Open" />
+                                                                    <MenuFlyoutItem Click="PreviewPortalItem_Click" Text="Preview" />
+                                                                    <MenuFlyoutItem Click="ShowPortalItemLocation_Click" Text="Show in Explorer" />
+                                                                    <MenuFlyoutSeparator />
+                                                                    <MenuFlyoutItem Click="CopyPortalItem_Click" Text="Copy item" />
+                                                                    <MenuFlyoutItem Click="CopyPortalPath_Click" Text="Copy path" />
+                                                                </MenuFlyout>
+                                                            </Grid.ContextFlyout>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                        </Grid>
+
+                                        <TextBlock
+                                            Margin="8"
+                                            VerticalAlignment="Bottom"
+                                            AutomationProperties.LiveSetting="Polite"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            IsHitTestVisible="False"
+                                            Text="{Binding ActiveTab.StateMessage}"
+                                            Style="{StaticResource CaptionTextBlockStyle}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
                 <Border
-                    Padding="20"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    x:Name="WorkspaceBorder"
+                    MinHeight="560"
+                    Background="{ThemeResource LayerFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="12">
-                    <StackPanel Spacing="12">
-                        <TextBlock Text="Foundation status" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                        <ItemsControl ItemsSource="{x:Bind ViewModel.StatusItems, Mode=OneWay}">
+                    CornerRadius="12"
+                    Visibility="{x:Bind Tools.IsOrganizerVisible, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    PointerMoved="WorkspaceBorder_PointerMoved"
+                    PointerPressed="WorkspaceBorder_PointerPressed"
+                    PointerReleased="WorkspaceBorder_PointerReleased">
+                    <Grid>
+                        <ItemsControl
+                            x:Name="WorkspaceItems"
+                            MinHeight="560"
+                            ItemsSource="{x:Bind ViewModel.Containers, Mode=OneWay}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Margin="0,4" Orientation="Horizontal" Spacing="10">
-                                        <FontIcon
-                                            FontSize="14"
-                                            Foreground="{StaticResource ProtocolAccentBrush}"
-                                            Glyph="&#xE73E;" />
-                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" />
-                                    </StackPanel>
+                                    <Grid
+                                        Width="{Binding Width}"
+                                        Height="{Binding Height}"
+                                        AllowDrop="{Binding CanChangeLayout}"
+                                        Canvas.ZIndex="{Binding ZIndex}"
+                                        Opacity="{Binding Opacity}"
+                                        AutomationProperties.Name="{Binding AccessibleName}"
+                                        DragOver="Container_DragOver"
+                                        Drop="Container_Drop"
+                                        Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <Border
+                                            Background="{Binding AppearanceKey, Converter={StaticResource ContainerAppearanceBrushConverter}}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="12">
+                                            <Grid Padding="14" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="8">
+                                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                                    <FontIcon FontSize="16" Foreground="{Binding IconTreatmentKey, Converter={StaticResource ContainerIconBrushConverter}}" Glyph="{Binding IconGlyph}" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2">
+                                                        <Button
+                                                            Width="28"
+                                                            Height="30"
+                                                            Padding="0"
+                                                            IsEnabled="{Binding CanChangeLayout}"
+                                                            AutomationProperties.HelpText="Add a file, folder, shortcut, application, or URL reference."
+                                                            AutomationProperties.Name="Add a reference">
+                                                            <FontIcon FontSize="13" Glyph="&#xE710;" />
+                                                            <Button.Flyout>
+                                                                <MenuFlyout>
+                                                                    <MenuFlyoutItem Click="AddFiles_Click" Text="Files" />
+                                                                    <MenuFlyoutItem Click="AddFolder_Click" Text="Folder" />
+                                                                    <MenuFlyoutItem Click="AddShortcut_Click" Text="Shortcut" />
+                                                                    <MenuFlyoutItem Click="AddApplication_Click" Text="Application" />
+                                                                    <MenuFlyoutItem Click="AddUrl_Click" Text="URL" />
+                                                                </MenuFlyout>
+                                                            </Button.Flyout>
+                                                        </Button>
+                                                        <Button
+                                                            Width="28"
+                                                            Height="30"
+                                                            Padding="0"
+                                                            IsEnabled="{Binding CanChangeLayout}"
+                                                            AutomationProperties.Name="Edit container details"
+                                                            Click="EditContainer_Click"
+                                                            ToolTipService.ToolTip="Edit container details">
+                                                            <FontIcon FontSize="13" Glyph="&#xE70F;" />
+                                                        </Button>
+                                                        <Button
+                                                            Width="28"
+                                                            Height="30"
+                                                            Padding="0"
+                                                            IsEnabled="{Binding CanChangeLayout}"
+                                                            AutomationProperties.HelpText="Focus this button, then use the arrow keys to move the container in eight-pixel steps."
+                                                            AutomationProperties.Name="{Binding MoveAutomationName}"
+                                                            Click="MoveKeyboardButton_Click"
+                                                            KeyDown="MoveKeyboardButton_KeyDown"
+                                                            ToolTipService.ToolTip="Move with arrow keys">
+                                                            <FontIcon FontSize="13" Glyph="&#xE7C2;" />
+                                                        </Button>
+                                                        <Button
+                                                            Width="28"
+                                                            Height="30"
+                                                            Padding="0"
+                                                            IsEnabled="{Binding CanResizeLayout}"
+                                                            AutomationProperties.HelpText="Focus this button, then use the arrow keys to resize the container in eight-pixel steps."
+                                                            AutomationProperties.Name="{Binding ResizeAutomationName}"
+                                                            Click="ResizeKeyboardButton_Click"
+                                                            KeyDown="ResizeKeyboardButton_KeyDown"
+                                                            ToolTipService.ToolTip="Resize with arrow keys">
+                                                            <FontIcon FontSize="13" Glyph="&#xE740;" />
+                                                        </Button>
+                                                        <Button
+                                                            Width="28"
+                                                            Height="30"
+                                                            Padding="0"
+                                                            AutomationProperties.Name="Container state and layout menu"
+                                                            ToolTipService.ToolTip="State and layout">
+                                                            <FontIcon FontSize="13" Glyph="&#xE712;" />
+                                                            <Button.Flyout>
+                                                                <MenuFlyout>
+                                                                    <MenuFlyoutSubItem Text="Display state">
+                                                                        <MenuFlyoutItem Click="ExpandedState_Click" Text="Expanded" />
+                                                                        <MenuFlyoutItem Click="RolledUpState_Click" Text="Roll up" />
+                                                                        <MenuFlyoutItem Click="CollapsedState_Click" Text="Collapse" />
+                                                                        <MenuFlyoutItem Click="CapsuleState_Click" Text="Capsule" />
+                                                                    </MenuFlyoutSubItem>
+                                                                    <ToggleMenuFlyoutItem Click="PinContainer_Click" IsChecked="{Binding IsPinned, Mode=OneWay}" IsEnabled="{Binding CanChangeLayout}" Text="Pin above other containers" />
+                                                                    <ToggleMenuFlyoutItem Click="AutoSizeContainer_Click" IsChecked="{Binding IsAutoSize, Mode=OneWay}" IsEnabled="{Binding CanChangeLayout}" Text="Auto-size to content" />
+                                                                    <ToggleMenuFlyoutItem Click="LockContainer_Click" IsChecked="{Binding IsLocked, Mode=OneWay}" Text="Lock layout" />
+                                                                    <ToggleMenuFlyoutItem Click="ContainerVisibility_Click" IsChecked="{Binding IsVisible, Mode=OneWay}" Text="Visible" />
+                                                                    <MenuFlyoutSubItem Text="Snap grid">
+                                                                        <MenuFlyoutItem Click="SnapGrid8_Click" IsEnabled="{Binding CanChangeLayout}" Text="8 physical pixels" />
+                                                                        <MenuFlyoutItem Click="SnapGrid16_Click" IsEnabled="{Binding CanChangeLayout}" Text="16 physical pixels" />
+                                                                        <MenuFlyoutItem Click="SnapGrid24_Click" IsEnabled="{Binding CanChangeLayout}" Text="24 physical pixels" />
+                                                                        <MenuFlyoutItem Click="SnapGrid32_Click" IsEnabled="{Binding CanChangeLayout}" Text="32 physical pixels" />
+                                                                    </MenuFlyoutSubItem>
+                                                                    <MenuFlyoutSeparator />
+                                                                    <MenuFlyoutItem Click="Appearance_Click" Text="Appearance…" />
+                                                                </MenuFlyout>
+                                                            </Button.Flyout>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+
+                                                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Visibility="{Binding ShowMetadata, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Label}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}" Text="{Binding TagsText}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}" Text="{Binding StateSummary}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Row="2" Spacing="6" Visibility="{Binding IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                                        <ComboBox
+                                                            AutomationProperties.HelpText="Switch between tabs, an expandable stack, and paged sections without changing item identities."
+                                                            AutomationProperties.Name="Container composition"
+                                                            IsEnabled="{Binding CanChangeLayout}"
+                                                            SelectedIndex="{Binding CompositionModeIndex, Mode=OneWay}"
+                                                            SelectionChanged="CompositionMode_SelectionChanged">
+                                                            <ComboBoxItem Content="Tabs" Tag="Tabs" />
+                                                            <ComboBoxItem Content="Stack" Tag="Stack" />
+                                                            <ComboBoxItem Content="Pages" Tag="Pages" />
+                                                        </ComboBox>
+                                                        <Button
+                                                            Grid.Column="1"
+                                                            AutomationProperties.Name="Add container section"
+                                                            Click="AddSection_Click"
+                                                            Content="Add section"
+                                                            IsEnabled="{Binding CanChangeLayout}" />
+                                                    </Grid>
+
+                                                    <ScrollViewer
+                                                        HorizontalScrollBarVisibility="Auto"
+                                                        HorizontalScrollMode="Enabled"
+                                                        VerticalScrollMode="Disabled"
+                                                        Visibility="{Binding IsTabs, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <ItemsControl ItemsSource="{Binding Sections}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <StackPanel Orientation="Horizontal" Spacing="4" />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Button
+                                                                        MinWidth="88"
+                                                                        AutomationProperties.Name="{Binding AccessibleName}"
+                                                                        Click="SelectSection_Click"
+                                                                        Content="{Binding Name}">
+                                                                        <Button.ContextFlyout>
+                                                                            <MenuFlyout>
+                                                                                <MenuFlyoutItem Click="RenameSection_Click" Text="Rename section" />
+                                                                                <MenuFlyoutItem Click="RemoveSection_Click" Text="Remove section" />
+                                                                            </MenuFlyout>
+                                                                        </Button.ContextFlyout>
+                                                                    </Button>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </ScrollViewer>
+
+                                                    <ItemsControl
+                                                        ItemsSource="{Binding Sections}"
+                                                        Visibility="{Binding IsStack, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Button
+                                                                    HorizontalAlignment="Stretch"
+                                                                    HorizontalContentAlignment="Stretch"
+                                                                    AutomationProperties.Name="{Binding AccessibleName}"
+                                                                    Click="ToggleStackSection_Click">
+                                                                    <Grid ColumnDefinitions="*,Auto">
+                                                                        <TextBlock Text="{Binding Name}" />
+                                                                        <TextBlock Grid.Column="1" Text="{Binding ItemCountLabel}" />
+                                                                    </Grid>
+                                                                </Button>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+
+                                                    <Grid
+                                                        ColumnDefinitions="Auto,*,Auto"
+                                                        Visibility="{Binding IsPages, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <Button AutomationProperties.Name="Previous container page" Click="PreviousPage_Click" IsEnabled="{Binding CanGoToPreviousPage}">
+                                                            <FontIcon Glyph="&#xE76B;" />
+                                                        </Button>
+                                                        <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PageLabel}" />
+                                                        <Button Grid.Column="2" AutomationProperties.Name="Next container page" Click="NextPage_Click" IsEnabled="{Binding CanGoToNextPage}">
+                                                            <FontIcon Glyph="&#xE76C;" />
+                                                        </Button>
+                                                    </Grid>
+                                                </StackPanel>
+
+                                                <ListView
+                                                    Grid.Row="3"
+                                                    ItemsSource="{Binding ActiveSection.Items}"
+                                                    Visibility="{Binding ShowItemContent, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    SelectionMode="None"
+                                                    IsItemClickEnabled="True"
+                                                    ItemClick="Reference_ItemClick">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid
+                                                                MinHeight="42"
+                                                                Padding="6,3"
+                                                                ColumnDefinitions="36,*,Auto"
+                                                                AutomationProperties.Name="{Binding AccessibleName}">
+                                                                <Grid Width="30" Height="30">
+                                                                    <FontIcon FontSize="18" Glyph="{Binding IconGlyph}" />
+                                                                    <Image Source="{Binding ThumbnailUri}" Stretch="UniformToFill" />
+                                                                </Grid>
+                                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                                                                    <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" />
+                                                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding AvailabilityLabel}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                                </StackPanel>
+                                                                <TextBlock Grid.Column="2" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Text="{Binding Label}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                                <Grid.ContextFlyout>
+                                                                    <MenuFlyout>
+                                                                        <MenuFlyoutItem Click="OpenReference_Click" Text="Open" />
+                                                                        <MenuFlyoutItem Click="ShowReferenceLocation_Click" Text="Show location" />
+                                                                        <MenuFlyoutItem Click="CopyReferenceTarget_Click" Text="Copy target" />
+                                                                        <MenuFlyoutSeparator />
+                                                                        <MenuFlyoutItem Click="EditReference_Click" Text="Edit details" />
+                                                                        <MenuFlyoutItem Click="MoveReferenceUp_Click" Text="Move up" />
+                                                                        <MenuFlyoutItem Click="MoveReferenceDown_Click" Text="Move down" />
+                                                                        <MenuFlyoutSeparator />
+                                                                        <MenuFlyoutItem Click="RemoveReference_Click" Text="Remove reference" />
+                                                                    </MenuFlyout>
+                                                                </Grid.ContextFlyout>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+
+                                                <Grid Grid.Row="4" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" Visibility="{Binding IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Text="{Binding VisibleItemCountLabel}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    <ComboBox
+                                                        Grid.Column="2"
+                                                        MinWidth="128"
+                                                        AutomationProperties.Name="Container sort order"
+                                                        IsEnabled="{Binding CanChangeLayout}"
+                                                        SelectedIndex="{Binding SortModeIndex, Mode=OneWay}"
+                                                        SelectionChanged="SortMode_SelectionChanged">
+                                                        <ComboBoxItem Content="Manual" Tag="Manual" />
+                                                        <ComboBoxItem Content="Name A–Z" Tag="NameAscending" />
+                                                        <ComboBoxItem Content="Name Z–A" Tag="NameDescending" />
+                                                        <ComboBoxItem Content="Type, then name" Tag="KindThenName" />
+                                                    </ComboBox>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+
+                                        <primitives:Thumb
+                                            Height="44"
+                                            Margin="0,38,148,0"
+                                            VerticalAlignment="Top"
+                                            AutomationProperties.HelpText="Drag with a pointer to move this container."
+                                            AutomationProperties.Name="{Binding MoveAutomationName}"
+                                            DragCompleted="GeometryThumb_DragCompleted"
+                                            DragDelta="MoveThumb_DragDelta"
+                                            IsEnabled="{Binding CanChangeLayout}"
+                                            IsTabStop="False">
+                                            <primitives:Thumb.Template>
+                                                <ControlTemplate TargetType="primitives:Thumb">
+                                                    <Grid Background="Transparent" />
+                                                </ControlTemplate>
+                                            </primitives:Thumb.Template>
+                                        </primitives:Thumb>
+
+                                        <primitives:Thumb
+                                            Width="30"
+                                            Height="30"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            AutomationProperties.HelpText="Drag with a pointer to resize this container."
+                                            AutomationProperties.Name="{Binding ResizeAutomationName}"
+                                            DragCompleted="GeometryThumb_DragCompleted"
+                                            DragDelta="ResizeThumb_DragDelta"
+                                            IsEnabled="{Binding CanResizeLayout}"
+                                            IsTabStop="False">
+                                            <primitives:Thumb.Template>
+                                                <ControlTemplate TargetType="primitives:Thumb">
+                                                    <Border Background="{StaticResource ProtocolAccentBrush}" CornerRadius="8,0,12,0">
+                                                        <FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" Foreground="White" Glyph="&#xE740;" />
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </primitives:Thumb.Template>
+                                        </primitives:Thumb>
+                                    </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                    </StackPanel>
+
+                        <Canvas IsHitTestVisible="False">
+                            <Border
+                                x:Name="DrawPreview"
+                                Visibility="Collapsed"
+                                Background="#227C5CFC"
+                                BorderBrush="{StaticResource ProtocolAccentBrush}"
+                                BorderThickness="2"
+                                CornerRadius="12" />
+                        </Canvas>
+                    </Grid>
                 </Border>
-                <InfoBar
-                    IsClosable="False"
-                    IsOpen="True"
-                    Message="Desktop organization features remain intentionally disabled until Phase 0 is approved."
-                    Severity="Informational"
-                    Title="Strict phase gate" />
             </StackPanel>
-        </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Page>

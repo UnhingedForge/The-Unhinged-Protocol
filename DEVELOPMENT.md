@@ -5,10 +5,15 @@ product README.
 
 ## Development status
 
-Only **Phase 0 — Foundation and Specification** is active. The current application is
-an intentionally non-functional foundation shell. Containers, folder portals, file
-rules, widgets, AI, synchronization, deployment, and release behavior may not be
-implemented until their phase is opened by the owner's written gate authorization.
+Only **Phase 1 — Core Desktop Organizer** is active. Phase 0 is accepted and closed.
+The current working tree implements PH1-001 through PH1-010: reference-only
+containers; persistent live folder portals; tabs, stacks, pages, compact states, and
+appearance controls; independent/global visibility, hotkeys, desktop gesture, and
+Peek; display/DPI/RDP/Explorer recovery; checksummed layout snapshots; unified local
+search; non-destructive onboarding; and the Phase 1 qualification harness. The
+owner-controlled Phase 1 acceptance gate is still open. Rules, widgets, AI,
+synchronization, deployment, and release behavior remain closed until their approved
+phases.
 
 The GitHub repository root is this `Source_Files` directory. Project specifications,
 review evidence, proposed visual assets, and release artifacts remain in the sibling
@@ -60,10 +65,26 @@ complete Phase 0 local check:
 
 - `Domain`: versioned entities and invariants; no external packages.
 - `Application`: use-case ports; depends only on Domain.
-- `Infrastructure`: persistence and future Windows adapters; depends on Application
-  and Domain.
+- `Infrastructure`: SQLite persistence and read-only Windows file-system adapters;
+  depends on Application and Domain.
+- `Presentation`: testable MVVM state and commands; depends on Application and Domain.
 - `App`: WinUI composition and presentation only.
-- `tests`: contract, migration, and dependency-boundary enforcement.
+- `tests`: contract, migration, recovery, MVVM, dependency-boundary, DPI-snap,
+  accessibility-contract, and 10,000-item portal performance enforcement.
+
+Run the Phase 1 performance qualifier against an interactive published app process:
+
+```powershell
+.\scripts\Measure-Phase1.ps1 `
+  -ExistingProcessId <PID> `
+  -LaunchMilliseconds <cold>,<warm1>,<warm2>,<warm3> `
+  -IdleScenario Background
+```
+
+The default measurement includes a 15-second warm-up and five-minute idle sample,
+then writes `Documentation\Phase_1_Performance.json` outside the repository. The
+background scenario represents the normal desktop-companion state and verifies that
+another process owns the foreground window before sampling begins.
 
 All package versions are central and every project has a lock file. Warnings are
 errors. Dependency vulnerabilities, secret findings, architecture violations, failed
@@ -71,14 +92,14 @@ tests, and unexpected artifacts block the phase.
 
 ## Phase governance
 
-Phase 0 was developed on branch `phase/0-foundation` and is integrated into `main`.
-The signed `phase-0-complete` tag is the immutable recovery anchor after the completed
-phase branch is removed under the owner-only branch policy. The GitHub milestone is
-`Phase 0 - Foundation and Specification`, and requirements are issues #1–#10. No
-Phase 1 branch or implementation is permitted until Phase 0 is completely accepted
-and the owner writes exactly:
+Phase 0 was integrated into `main`; its closed milestone contains issues #1–#10 and
+the signed `phase-0-complete` tag is its immutable recovery anchor. Phase 1 is
+developed directly on protected `main` under owner-approved scope changes SC-003 and
+SC-004. Michael D. Werdeman II alone stages, commits, pushes, closes issues, and signs
+completion commits/tags. No Phase 2 work is permitted until Phase 1 is completely
+accepted and the owner writes exactly:
 
-`I approve Phase 0 and authorize Phase 1.`
+`I approve Phase 1 and authorize Phase 2.`
 
 ## Licensing and contributions
 
